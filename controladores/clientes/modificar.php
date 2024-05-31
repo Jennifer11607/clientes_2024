@@ -18,7 +18,7 @@ if ($_POST['cli_nombre'] == '' || $_POST['cli_apellido'] == '' || $_POST['cli_ni
     $resultado = [
         'mensaje' => 'DEBE VALIDAR LOS DATOS',
         'codigo' => 2
-    ];
+    ]; 
 } else {
     try {
         // PARA PODER REALIZAR CONSULTA
