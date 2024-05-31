@@ -2,33 +2,38 @@
 
 require '../../modelos/Cliente.php';
 
-$nit = $_POST['cli_nit'];
-$telefono = $_POST['cli_telefono'];
-
 // VALIDAR INFORMACION
+$_POST['cli_id'] = filter_var(base64_decode($_POST['cli_id']), FILTER_SANITIZE_NUMBER_INT);
 $_POST['cli_nombre'] = htmlspecialchars($_POST['cli_nombre']);
 $_POST['cli_apellido'] = htmlspecialchars($_POST['cli_apellido']);
-$_POST['cli_nit'] = filter_var($nit, FILTER_VALIDATE_INT);
-$_POST['cli_telefono'] = filter_var($telefono, FILTER_VALIDATE_INT);
+$_POST['cli_nit'] = filter_var($_POST['cli_nit'], FILTER_VALIDATE_INT);
+$_POST['cli_telefono'] = filter_var($_POST['cli_telefono'], FILTER_VALIDATE_INT);
+
+
+
+
 
 if ($_POST['cli_nombre'] == '' || $_POST['cli_apellido'] == '' || $_POST['cli_nit'] < 0 || $_POST['cli_telefono'] < 0) {
-    // ALERTA PARA VALIDAR DATOS
+    // ALERTA PARA  PODER VALIDAR DATOS
     $resultado = [
         'mensaje' => 'DEBE VALIDAR LOS DATOS',
         'codigo' => 2
     ];
 } else {
     try {
-        // REALIZAR CONSULTA
-        $clientes = new Cliente($_POST);
-        $guardar = $clientes->guardar();
+        // PARA PODER REALIZAR CONSULTA
+        $cliente = new Cliente($_POST);
+
+
+        $modificar = $cliente->modificar();
+
         $resultado = [
-            'mensaje' => 'CLIENTE INSERTADO CORRECTAMENTE',
+            'mensaje' => 'CLIENTE MODIFICADO CORRECTAMENTE',
             'codigo' => 1
         ];
     } catch (PDOException $pe) {
         $resultado = [
-            'mensaje' => 'OCURRIO UN ERROR INSERTANDO A LA BD',
+            'mensaje' => 'OCURRIO UN ERROR MODIFICANDO EL REGISTRO A LA BD',
             'detalle' => $pe->getMessage(),
             'codigo' => 0
         ];
@@ -45,16 +50,16 @@ if ($_POST['cli_nombre'] == '' || $_POST['cli_apellido'] == '' || $_POST['cli_ni
 $alertas = ['danger', 'success', 'warning'];
 
 
+ echo "<br>"; 
+ echo "<br>"; 
+ echo "<br>"; 
+
 include_once '../../vistas/templates/header.php'; ?>
 
-<br>
-<br>
-<br>
-
-<div class="row justify-content-center mt-5">
+<div class="row justify-content-center">
     <div class="col-lg-6 alert alert-<?= $alertas[$resultado['codigo']] ?>" role="alert">
         <?= $resultado['mensaje'] ?>
-      
+        <?= $resultado['detalle'] ?>
     </div>
 </div>
 <div class="row justify-content-center">

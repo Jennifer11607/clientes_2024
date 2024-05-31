@@ -1,4 +1,7 @@
 
+
+<br>
+<br>
 <?php include_once '../../vistas/templates/header.php'; ?>
 
 <h1 class="text-center mt-5">FORMULARIO DE CLIENTES</h1>

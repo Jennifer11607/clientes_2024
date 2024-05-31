@@ -1,7 +1,8 @@
 <?php
 require 'Conexion.php';
 
-class Cliente extends Conexion{
+class Cliente extends Conexion
+{
     public $cli_id;
     public $cli_nombre;
     public $cli_apellido;
@@ -15,44 +16,57 @@ class Cliente extends Conexion{
         $this->cli_id = $args['cli_id'] ?? null;
         $this->cli_nombre = $args['cli_nombre'] ?? '';
         $this->cli_apellido = $args['cli_apellido'] ?? '';
-        $this->cli_nit = $args['cli_nit'] ?? 0;
-        $this->cli_telefono = $args['cli_telefono'] ?? 0;
+        $this->cli_nit = $args['cli_nit'] ?? "";
+        $this->cli_telefono = $args['cli_telefono'] ?? "";
         $this->cli_situacion = $args['cli_situacion'] ?? '';
-
     }
 
-      // METODO PARA INSERTAR
-      public function guardar(){
+    // METODO PARA INSERTAR
+    public function guardar()
+    {
         $sql = "INSERT into clientes (cli_nombre,
          cli_apellido, cli_nit, cli_telefono) values ('$this->cli_nombre',
          '$this->cli_apellido', '$this->cli_nit', '$this->cli_telefono')";
         $resultado = $this->ejecutar($sql);
-        return $resultado; 
+        return $resultado;
     }
 
 
-    public function buscar(...$columnas){
+    // METODO PARA CONSULTAR
+
+
+
+
+    public function buscar(...$columnas)
+    {
         $cols = count($columnas) > 0 ? implode(',', $columnas) : '*';
         $sql = "SELECT $cols FROM clientes where cli_situacion = 1 ";
 
-        if($this->cli_nombre != ''){
+        if ($this->cli_nombre != '') {
             $sql .= " AND cli_nombre like '%$this->cli_nombre%' ";
         }
-        if($this->cli_apellido != ''){
-            $sql .= " AND cli_apellido = $this->cli_apellido ";
+        if ($this->cli_apellido != '') {
+            $sql .= " AND cli_apellido like '%$this->cli_apellido%' ";
         }
-
-        if($this->cli_nit != ''){
-            $sql .= " AND cli_nit = $this->cli_nit ";
-        }
-
-        if($this->cli_telefono != ''){
-            $sql .= " AND cli_telefono = $this->cli_telefono ";
-        }
-
 
         $resultado = self::servir($sql);
         return $resultado;
-}
+    }
 
+    public function buscarId($id)
+    {
+        $sql = " SELECT * FROM clientes WHERE cli_situacion = 1 AND cli_id = '$id' ";
+
+        $resultado =  array_shift(self::servir($sql));
+
+        return $resultado;
+    }
+
+    
+        // METODO PARA MODIFICAR
+        public function modificar(){
+            $sql = "UPDATE clientes SET cli_nombre = '$this->cli_nombre', prod_precio = '$this->cli_apellido' WHERE clis_id = $this->cli_id ";
+            $resultado = $this->ejecutar($sql);
+            return $resultado; 
+        }
 }
